@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Student Mini-Portal</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>Student Information Mini-Portal</h1></header>
+  <nav>
+    <a href="#" onclick="showPage('studentReg')">Student Registration</a>
+    <a href="#" onclick="openAdmin()">Admin Page</a>
+  </nav>
+
+  <!-- Student Registration -->
+  <div id="studentReg" class="container">
+    <h2>📝 Student Registration</h2>
+
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input id="name" placeholder="e.g. Juan Dela Cruz" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input id="email" type="email" placeholder="e.g. juan@email.com" required />
+    </div>
+
+    <div class="form-group">
+        <label for="course">Course</label>
+        <select id="course">
+          <option value="">-- Select Course --</option>
+          <option value="BSIT">BS Information Technology</option>
+          <option value="BSCS">BS Computer Science</option>
+          <option value="BSECE">BS Electronics & Communications Engineering</option>
+          <option value="BSBA">BS Business Administration</option>
+          <option value="BSA">BS Accountancy</option>
+          <option value="BSED">BS Education</option>
+          <option value="BSN">BS Nursing</option>
+          <option value="BSHM">BS Hospitality Management</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="year">Year Level</label>
+        <select id="year">
+          <option value="">-- Select Year --</option>
+          <option value="1st Year">1st Year</option>
+          <option value="2nd Year">2nd Year</option>
+          <option value="3rd Year">3rd Year</option>
+          <option value="4th Year">4th Year</option>
+        </select>
+      </div>
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" placeholder="Enter address"></textarea>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button id="saveBtn" style="flex:1">Save</button>
+    </div>
+
+    <hr style="margin:20px 0;">
+
+    <h3>🔄 Request Update</h3>
+    <div class="form-group">
+      <label for="reqStudentId">Student ID (from your email)</label>
+      <input id="reqStudentId" placeholder="e.g. STU-AB12CD" required />
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <button id="requestBtn" style="flex:1; background:#f39c12;">Request Update</button>
+    </div>
+    <p class="muted">📌 Enter your Student ID and new details to request an update.</p>
+  </div>
+
+  <!-- Admin Page -->
+  <div id="adminPage" class="container hidden">
+    <h2>👨‍💻 Admin Dashboard</h2>
+
+    <div class="tabs">
+      <button id="studentsTab" class="active" onclick="switchTab('students')">Students</button>
+      <button id="requestsTab" onclick="switchTab('requests')">Requests</button>
+    </div>
+
+    <div id="studentsSection">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Email</th><th>Course</th><th>Year</th><th>Address</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="studentTable"></tbody>
+      </table>
+    </div>
+
+    <div id="requestsSection" class="hidden">
+      <table>
+        <thead>
+          <tr><th>Student ID</th><th>Name</th><th>Requested Changes</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="requestsTable"></tbody>
+      </table>
+    </div>
+
+    <button id="logoutBtn" onclick="logoutAdmin()">Logout</button>
+  </div>
+
+<!-- Admin Login Modal -->
+<div id="adminLogin" class="hidden">
+    <div class="box">
+      <span class="close-btn" onclick="closeAdminLogin()">&times;</span>
+      <h3>🔐 Admin Login</h3>
+      <input type="password" id="adminPassword" placeholder="Enter password" />
+      <button onclick="checkAdmin()">Login</button>
+      <p class="muted">Hint: default password is <b>admin123</b></p>
+    </div>
+  </div>
+
+  <!-- Firebase + App Logic -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
