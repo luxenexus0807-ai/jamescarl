@@ -201,33 +201,50 @@ window.editStudent = async (id) => {
   
     alert("✏️ Now editing student: " + (data.name || "Unknown"));
   };
-// ✅ Approve Request (with email)
+// ✅ Approve Request (update existing student instead of adding new)
 window.approveRequest = async (id) => {
-    const snap = await getDoc(doc(db, "requests", id));
-    if (!snap.exists()) return;
-    const data = snap.data();
-  
-    // Save to students collection
-    const studentRef = await addDoc(studentsCol, data);
-  
-    // Delete request after approval
-    await deleteDoc(doc(db, "requests", id));
-  
-    // Send approval email
-    emailjs.send("service_33halra", "template_yf7lbga", {
-      to_email: data.email,
-      student_id: data.studentId || studentRef.id,
-      name: data.name,
-      course: data.course,
-      year: data.year,
-      address: data.address
-    }).then(() => {
-      alert("✅ Request approved and student notified via email!");
-    }).catch((err) => {
-      console.error(err);
-      alert("⚠️ Approved but failed to send email.");
-    });
-  };
+  const snap = await getDoc(doc(db, "requests", id));
+  if (!snap.exists()) return;
+  const data = snap.data();
+
+  try {
+    // Find the student by studentId
+    const q = query(studentsCol, where("studentId", "==", data.studentId));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Update the existing student
+      const studentDoc = querySnapshot.docs[0];
+      await updateDoc(doc(db, "students", studentDoc.id), {
+        name: data.name,
+        email: data.email,
+        course: data.course,
+        year: data.year,
+        address: data.address
+      });
+
+      // Delete the request
+      await deleteDoc(doc(db, "requests", id));
+
+      // Send approval email
+      await emailjs.send("service_33halra", "template_yf7lbga", {
+        to_email: data.email,
+        student_id: data.studentId,
+        name: data.name,
+        course: data.course,
+        year: data.year,
+        address: data.address
+      });
+
+      alert("✅ Request approved and student record updated!");
+    } else {
+      alert("⚠️ No matching student found for ID " + data.studentId);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error approving request.");
+  }
+};
   
   // ❌ Reject Request (with email)
   window.rejectRequest = async (id) => {
