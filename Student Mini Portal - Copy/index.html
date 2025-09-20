@@ -5,6 +5,70 @@
   <title>Student Mini-Portal</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 📱 Mobile Responsive Styling */
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.2rem;
+        padding: 12px;
+      }
+
+      nav {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav a {
+        display: block;
+        padding: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .container {
+        margin: 10px;
+        padding: 20px;
+      }
+
+      /* Forms */
+      input, select, textarea, button {
+        font-size: 1rem;
+        padding: 10px;
+      }
+
+      /* Tables → Card style */
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+      thead { display: none; }
+
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fff;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 6px;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+
+      td:last-child {
+        border-bottom: none;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #2c3e50;
+        margin-right: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header><h1>Student Information Mini-Portal</h1></header>
@@ -89,7 +153,20 @@
         <thead>
           <tr><th>ID</th><th>Name</th><th>Email</th><th>Course</th><th>Year</th><th>Address</th><th>Actions</th></tr>
         </thead>
-        <tbody id="studentTable"></tbody>
+        <tbody id="studentTable">
+          <!-- Example row (will be auto-filled by JS with data-label) -->
+          <!--
+          <tr>
+            <td data-label="ID">STU-1234</td>
+            <td data-label="Name">Juan Dela Cruz</td>
+            <td data-label="Email">juan@email.com</td>
+            <td data-label="Course">BSIT</td>
+            <td data-label="Year">2nd Year</td>
+            <td data-label="Address">Manila</td>
+            <td data-label="Actions"><button>Edit</button><button>Delete</button></td>
+          </tr>
+          -->
+        </tbody>
       </table>
     </div>
 
@@ -98,7 +175,17 @@
         <thead>
           <tr><th>Student ID</th><th>Name</th><th>Requested Changes</th><th>Actions</th></tr>
         </thead>
-        <tbody id="requestsTable"></tbody>
+        <tbody id="requestsTable">
+          <!-- Example row (will be auto-filled by JS with data-label) -->
+          <!--
+          <tr>
+            <td data-label="Student ID">STU-1234</td>
+            <td data-label="Name">Juan Dela Cruz</td>
+            <td data-label="Requested Changes">Email: new@email.com, Course: BSCS</td>
+            <td data-label="Actions"><button>Approve</button><button>Reject</button></td>
+          </tr>
+          -->
+        </tbody>
       </table>
     </div>
 
@@ -112,7 +199,7 @@
       <h3>🔐 Admin Login</h3>
       <input type="password" id="adminPassword" placeholder="Enter password" />
       <button onclick="checkAdmin()">Login</button>
-      <p class="muted"></p>
+      <p class="muted">Hint: default password is <b>admin123</b></p>
     </div>
   </div>
 
@@ -121,4 +208,3 @@
   <script type="module" src="app.js"></script>
 </body>
 </html>
-
