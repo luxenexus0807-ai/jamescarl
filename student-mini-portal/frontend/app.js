@@ -87,7 +87,7 @@ async function loadRequests() {
 // ---------- Save Student (Add / Update) ----------
 saveBtn.addEventListener('click', async () => {
   const payload = {
-    studentId: null, // optional - server will generate if missing
+    studentId: editingId,   // ✅ use the existing ID when editing
     name: nameInput.value.trim(),
     email: emailInput.value.trim(),
     course: courseInput.value.trim(),

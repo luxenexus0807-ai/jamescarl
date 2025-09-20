@@ -96,7 +96,9 @@
       <input type="text" id="address" placeholder="Address" required />
       <!-- GWA auto-filled -->
       <input type="number" id="gwa" placeholder="GWA (auto)" readonly />
-      <button type="submit">Add Student</button>
+      <button type="submit">save</button>
+      <button type="button" id="updateBtn" style="display:none;">Update</button>
+<button type="button" id="cancelBtn" style="display:none;">Cancel</button>
     </form>
 
     <h2>Student Records</h2>
@@ -119,12 +121,13 @@
     </table>
   </main>
 
-  <h2>GWA Calculator</h2>
-  <form id="gwaForm">
-    <input type="text" id="grades" placeholder="Enter grades separated by commas (e.g. 90,85,88)" required />
-    <button type="submit">Calculate GWA</button>
-  </form>
-  <p id="gwaResult"></p>
+ <form id="gwaForm">
+  <input type="number" id="prelim" placeholder="Prelim" min="0" max="100" required>
+  <input type="number" id="midterm" placeholder="Midterm" min="0" max="100" required>
+  <input type="number" id="final" placeholder="Final" min="0" max="100" required>
+  <button type="submit">Compute GWA</button>
+</form>
+<p id="gwaResult"></p>
 
   <script src="app.js"></script>
 </body>

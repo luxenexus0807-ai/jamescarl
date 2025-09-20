@@ -23,6 +23,10 @@ async function api(path, opts = {}) {
   return res.json().catch(() => ({}));
 }
 
+function clearForm() {
+  nameInput.value = emailInput.value = courseInput.value = yearInput.value = addressInput.value = gwaInput.value = "";
+}
+
 // ---------- Load students ----------
 async function loadStudents() {
   const students = await api("/students");
@@ -46,52 +50,28 @@ async function loadStudents() {
   });
 }
 
+// Keep track if we're editing
+let editingId = null;
+
 // ---------- Edit student ----------
 async function editStudent(id) {
   try {
-    const s = await api(`/students/${id}`); // fetch one student
-    // Fill form with existing data
+    const s = await api(`/students/${id}`);
     nameInput.value = s.name;
     emailInput.value = s.email;
     courseInput.value = s.course;
     yearInput.value = s.year;
     addressInput.value = s.address;
     gwaInput.value = s.gwa || "";
-
-    // Change form submit to update
-    studentForm.onsubmit = async (e) => {
-      e.preventDefault();
-      const payload = {
-        name: nameInput.value.trim(),
-        email: emailInput.value.trim(),
-        course: courseInput.value.trim(),
-        year: yearInput.value.trim(),
-        address: addressInput.value.trim(),
-        gwa: gwaInput.value ? parseFloat(gwaInput.value) : null,
-      };
-      try {
-        await api(`/students/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(payload),
-        });
-        alert("✏️ Student updated!");
-        studentForm.reset();
-        // restore form back to add mode
-        studentForm.onsubmit = addStudentHandler;
-        loadStudents();
-      } catch (err) {
-        console.error(err);
-        alert("❌ Failed to update student");
-      }
-    };
+    editingId = id;
   } catch (err) {
     console.error(err);
     alert("❌ Failed to fetch student data");
   }
 }
 
-// keep add-student logic in a separate function so we can restore it after edit
-async function addStudentHandler(e) {
+// ---------- Form submit (Add / Edit) ----------
+studentForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const payload = {
     name: nameInput.value.trim(),
@@ -102,46 +82,70 @@ async function addStudentHandler(e) {
     gwa: gwaInput.value ? parseFloat(gwaInput.value) : null,
   };
 
+  if (!payload.name || !payload.email) {
+    return alert("Name and Email are required!");
+  }
+
   try {
-    await api("/students", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-    alert("✅ Student added!");
+    if (editingId) {
+      // Update existing student
+      await api(`/students/${editingId}`, { method: "PUT", body: JSON.stringify(payload) });
+      alert("✅ Student updated!");
+      editingId = null;
+    } else {
+      // Add new student
+      await api("/students", { method: "POST", body: JSON.stringify(payload) });
+      alert("✅ Student added!");
+    }
     studentForm.reset();
     loadStudents();
   } catch (err) {
     console.error(err);
-    alert("❌ Failed to add student");
+    alert("❌ Failed to save student");
   }
-}
-studentForm.addEventListener("submit", addStudentHandler);
+});
+
 // ---------- Delete student ----------
 async function deleteStudent(id) {
   if (!confirm("Delete student?")) return;
-  await api(`/students/${id}`, { method: "DELETE" });
-  loadStudents();
+  try {
+    await api(`/students/${id}`, { method: "DELETE" });
+    loadStudents();
+  } catch (err) {
+    console.error(err);
+    alert("❌ Failed to delete student");
+  }
 }
 window.deleteStudent = deleteStudent;
 
-// ---------- GWA Calculator ----------
+/// ---------- GWA Calculator (Prelim, Midterm, Final) ----------
 document.getElementById("gwaForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const gradesStr = document.getElementById("grades").value;
-  const grades = gradesStr.split(",").map((g) => parseFloat(g.trim()));
 
-  const response = await fetch(API_URL + "/compute-gwa", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ grades }),
-  });
+  // Get values from inputs
+  const prelim = parseFloat(document.getElementById("prelim").value);
+  const midterm = parseFloat(document.getElementById("midterm").value);
+  const final = parseFloat(document.getElementById("final").value);
 
-  const result = await response.json();
-  document.getElementById("gwaResult").innerText = `GWA: ${result.gwa}`;
+  // Validate
+  if (isNaN(prelim) || isNaN(midterm) || isNaN(final)) {
+    alert("Please enter valid numeric grades for all terms.");
+    return;
+  }
 
-  // Auto-fill GWA field in student form
-  gwaInput.value = result.gwa;
+  // Optional: weights for each term
+  const weights = { prelim: 0.3, midterm: 0.3, final: 0.4 };
+
+  // Calculate weighted GWA
+  const gwa = (prelim * weights.prelim) + (midterm * weights.midterm) + (final * weights.final);
+  const roundedGWA = gwa.toFixed(2);
+
+  // Display result
+  document.getElementById("gwaResult").innerText = `GWA: ${roundedGWA}`;
+
+  // Auto-fill student form
+  gwaInput.value = roundedGWA;
 });
 
-// init
+// ---------- Init ----------
 loadStudents();
