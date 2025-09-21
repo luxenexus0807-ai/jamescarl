@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Happy Birthday ❤️</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <canvas id="confetti"></canvas>
+
+    <!-- GREETING -->
+    <div class="greeting">Happy Birthday, Maam Kathleen Mae Vallespin! 🎉</div>
+
+    <!-- CAKE -->
+    <div class="cake">
+        <div class="candles" id="candles">
+          <div class="candle"><div class="flame"></div></div>
+          <div class="candle"><div class="flame"></div></div>
+          <div class="candle"><div class="flame"></div></div>
+        </div>
+      
+        <div class="layer layer3">
+          <img class="layer-pic" src="family.JPG" alt="Top layer picture">
+        </div>
+        <div class="layer layer2">
+          <img class="layer-pic" src="TWO.JPG" alt="Middle layer picture">
+        </div>
+        <div class="layer layer1">
+          <img class="layer-pic" src="6235362580814219542.jpg" alt="Bottom layer picture">
+        </div>
+      </div>
+    <!-- BUTTONS -->
+    <div class="btns">
+      <button id="btn-light" onclick="lightCandles()">🎂 Light Candles (wish before you blow) </button>
+      <button id="btn-blow" onclick="blowCandles()" style="display:none;">💨 Blow Out</button>
+      <button id="btn-message" onclick="showMessage()" style="display:none;">🌟 My Message</button>
+    </div>
+
+    <!-- MESSAGE CONTAINER -->
+    <div class="message-container">
+      <div class="photo">
+        <img src="https://scontent.fmnl25-7.fna.fbcdn.net/v/t39.30808-6/500225470_1664476264258199_5805047587750888179_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeEVJaK7x42TSQSh_Hr4OPD04mT7p3ZQQZLiZPundlBBkiovNP3S3Z0Ay8UTdmU-kv6zejNtzO4_4zN5ZvqEwwDu&_nc_ohc=Alrxk8CwO5IQ7kNvwGS2z4S&_nc_oc=AdkD2uonBlnndE7cTLPdtXLvCVC7ljQpQ8_BoMK0tACy_KymmnZ-eurt6PSnt9f9hHg&_nc_zt=23&_nc_ht=scontent.fmnl25-7.fna&_nc_gid=90kOPDyvMVveWZ56cBOUOg&oh=00_AfY73ILhmoZS-2OVnS7mqW1L9z82ZW4pcsNOxgF0SGCOow&oe=68D5FDBF" alt="Her Photo">
+      </div>
+      <div class="message" id="message"></div>
+    </div>
+  </div>
+
+  <!-- Background music -->
+  <audio id="bg-music" loop>
+    <source src="HAPPY BIRTHDAY INSTRUMENTAL.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
