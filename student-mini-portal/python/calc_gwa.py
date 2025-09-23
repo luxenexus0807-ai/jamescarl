@@ -1,7 +1,7 @@
 import sys
 import json
 
-# Read grades from Node.js (passed as JSON)
+# Read JSON input from Node.js
 data = sys.stdin.read()
 grades = json.loads(data)  # Example: {"grades": [90, 85, 88]}
 
@@ -13,5 +13,5 @@ else:
     gwa = sum(grades_list) / len(grades_list)
     result = {"gwa": round(gwa, 2)}
 
-# Return result as JSON
+# Print JSON result
 print(json.dumps(result))

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <span id="hamburger" onclick="toggleSidebar()">☰</span>
+    <h1>🏫 My University - Student Portal</h1>
+</header>
+
+  <!-- Login -->
+  <div id="loginPage" class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="professor">Professor</option>
+      </select>
+      <input type="text" id="username" placeholder="Username / Student ID" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>Not registered? <a href="#" onclick="showRegister()">Create an account</a></p>
+      <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+  </div>
+  <div id="forgotPasswordModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Reset Password</h3>
+      <form id="forgotPasswordForm">
+        <input type="text" id="fpUsername" placeholder="Enter Username or Student ID" required>
+        <button type="submit">Send Reset Link</button>
+        <button type="button" onclick="closeForgotPassword()">Cancel</button>
+      </form>
+      <p id="fpMessage"></p>
+    </div>
+  </div>
+  <!-- Registration -->
+  <div id="registerPage" class="login-container hidden">
+    <h2>Student Registration</h2>
+    <form id="registerForm">
+      <input type="text" id="regStudentId" placeholder="Student ID" required>
+      <input type="text" id="regUsername" placeholder="Username" required>
+      <input type="password" id="regPassword" placeholder="Password" required>
+      <input type="text" id="regName" placeholder="Full Name" required>
+      <input type="text" id="regCourse" placeholder="Course" required>
+      <input type="text" id="regYear" placeholder="Year Level" required>
+      <input type="text" id="regAddress" placeholder="Address" required>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+  </div>
+
+  <!-- Portal -->
+  <div id="portal" class="container hidden">
+    <nav class="sidebar">
+      <ul>
+        <li class="prof-only"><a href="#" onclick="showSection('dashboardSection')">Dashboard</a></li>
+        <li class="prof-only"><a href="#" onclick="showSection('manageStudentsSection')">Manage Students</a></li>
+        <li class="prof-only"><a href="#" onclick="showSection('searchStudentSection')">Search Student</a></li>
+        <li class="student-only"><a href="#" onclick="showSection('myRecord')">My Record</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <!-- Dashboard -->
+      <section id="dashboardSection" class="prof-only hidden">
+        <h2>Dashboard</h2>
+        <div class="cards">
+          <div class="card">📊 Total Students: <span id="totalStudents">0</span></div>
+          <div class="card">🎓 Last Added: <span id="lastStudent">N/A</span></div>
+          <div class="card">📈 Avg GWA: <span id="avgGwa">N/A</span></div>
+        </div>
+      </section>
+
+      <!-- Manage Students -->
+      <section id="manageStudentsSection" class="prof-only hidden">
+        <h2>Manage Students</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Username</th><th>Student ID</th>
+              <th>Course</th><th>Year</th><th>Address</th>
+              <th>GWA</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </section>
+
+      <!-- Search Student -->
+      <section id="searchStudentSection" class="prof-only hidden">
+        <h2>Search Student</h2>
+        <input type="text" id="studentSearch" placeholder="Search by Name or ID..." style="width:100%; padding:0.5rem;">
+        <div id="studentGradesView" class="hidden" style="margin-top:1rem;">
+          <h3>Student Record</h3>
+          <p><strong>Name:</strong> <span id="viewName"></span></p>
+          <p><strong>Student ID:</strong> <span id="viewStudentId"></span></p>
+          <p><strong>Course:</strong> <span id="viewCourse"></span></p>
+          <p><strong>Year:</strong> <span id="viewYear"></span></p>
+          <h4>Subjects & Grades</h4>
+          <table>
+            <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+            <tbody id="selectedStudentSubjects"></tbody>
+          </table>
+          <p><strong>GWA:</strong> <span id="selectedStudentGwa">N/A</span></p>
+        </div>
+      </section>
+
+      <!-- My Record -->
+      <section id="myRecord" class="student-only hidden">
+        <h2>My Record</h2>
+        <div id="studentInfo"></div>
+        <h3>Subjects & Grades</h3>
+        <table>
+          <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+          <tbody id="subjectTable"></tbody>
+        </table>
+        <p><strong>GWA:</strong> <span id="myGwa">N/A</span></p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Update Grades Modal -->
+  <div id="gradesModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Update Grades</h3>
+      <form id="gradesForm">
+        <label>OLSA01</label>
+        <select id="olsa01">
+          <option value="">Select Grade</option>
+          <option value="1.0">1.0 - Excellent</option>
+          <option value="1.25">1.25 - Very Good</option>
+          <option value="1.5">1.5 - Very Good</option>
+          <option value="1.75">1.75 - Good</option>
+          <option value="2.0">2.0 - Good</option>
+          <option value="2.25">2.25 - Satisfactory</option>
+          <option value="2.5">2.5 - Satisfactory</option>
+          <option value="2.75">2.75 - Pass</option>
+          <option value="3.0">3.0 - Pass</option>
+          <option value="4.0">4.0 - Conditional</option>
+          <option value="5.0">5.0 - Fail</option>
+          <option value="INC">INC - Incomplete</option>
+        </select>
+
+        <label>OLIPT2</label>
+        <select id="olipt2">
+          <option value="">Select Grade</option>
+          <option value="1.0">1.0 - Excellent</option>
+          <option value="1.25">1.25 - Very Good</option>
+          <option value="1.5">1.5 - Very Good</option>
+          <option value="1.75">1.75 - Good</option>
+          <option value="2.0">2.0 - Good</option>
+          <option value="2.25">2.25 - Satisfactory</option>
+          <option value="2.5">2.5 - Satisfactory</option>
+          <option value="2.75">2.75 - Pass</option>
+          <option value="3.0">3.0 - Pass</option>
+          <option value="4.0">4.0 - Conditional</option>
+          <option value="5.0">5.0 - Fail</option>
+          <option value="INC">INC - Incomplete</option>
+        </select>
+
+        <button type="submit">Save Grades</button>
+        <button type="button" onclick="closeGradesModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
